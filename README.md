@@ -36,6 +36,23 @@ public class FilterConfig
 
 In order to enable throttling you'll have to decorate your Controller or Action with <code>EnableThrottingAttribute</code>, if you want to exclude a certain Action you can apply <code>DisableThrottingAttribute</code>.
 
+``` cs
+[EnableThrotting]
+public class HomeController : Controller
+{
+    public ActionResult Index()
+    {
+        return View();
+    }
+
+    [DisableThrotting]
+    public ActionResult About()
+    {
+        return View();
+    }
+}
+```
+
 ###Endpoint throttling based on IP
 
 If, from the same IP, in the same second, you'll make two calls to <code>home/index</code>, the last call will get blocked.
@@ -52,6 +69,18 @@ var throttleFilter = new ThrottlingFilter
     },
     Repository = new CacheRepository()
 };
+```
+
+Using the <code>ThrottlePolicy.EndpointType</code> property you can chose how the throttle key gets compose.
+
+``` cs
+    public enum EndpointThrottlingType
+    {
+        AbsolutePath = 1,
+        PathAndQuery,
+        ControllerAndAction,
+        Controller
+    }
 ```
 
 ###IP and/or endpoint White-listing

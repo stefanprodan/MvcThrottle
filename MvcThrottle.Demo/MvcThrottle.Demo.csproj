@@ -122,6 +122,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MvcThrottleCustomFilter.cs" />
     <Compile Include="Helpers\MvcThrottleLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.0.min.map" />
+    <Content Include="Views\Shared\RateLimited.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MvcThrottle\MvcThrottle.csproj">

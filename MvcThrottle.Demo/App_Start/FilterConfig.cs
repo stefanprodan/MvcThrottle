@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MvcThrottle.Demo.Helpers;
+using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 
@@ -10,7 +11,7 @@ namespace MvcThrottle.Demo
         {
             filters.Add(new HandleErrorAttribute());
 
-            var throttleFilter = new ThrottlingFilter
+            var throttleFilter = new MvcThrottleCustomFilter
             {
                 Policy = new MvcThrottle.ThrottlePolicy(perSecond: 1, perMinute: 10, perHour: 60 * 10, perDay: 600 * 10)
                 {

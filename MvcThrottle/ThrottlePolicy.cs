@@ -32,6 +32,7 @@ namespace MvcThrottle
         public bool EndpointThrottling { get; set; }
         public List<string> EndpointWhitelist { get; set; }
         public Dictionary<string, RateLimits> EndpointRules { get; set; }
+        public bool IncludeQueryString { get; set; }
 
         /// <summary>
         /// All requests including the rejected ones will stack in this order: week, day, hour, min, sec

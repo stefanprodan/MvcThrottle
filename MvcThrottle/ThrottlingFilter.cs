@@ -64,6 +64,7 @@ namespace MvcThrottle
             if (Policy != null && applyThrottling)
             {
                 var identity = SetIndentity(filterContext.HttpContext.Request);
+                System.Diagnostics.Debug.WriteLine(identity.ToString());
                 if (!IsWhitelisted(identity))
                 {
                     TimeSpan timeSpan = TimeSpan.FromSeconds(1);
@@ -164,7 +165,7 @@ namespace MvcThrottle
         {
             var entry = new RequestIdentity();
             entry.ClientIp = GetClientIp(request).ToString();
-            entry.Endpoint = request.Url.AbsolutePath.ToLowerInvariant();
+            entry.Endpoint = Policy.IncludeQueryString ? request.Url.PathAndQuery.ToLowerInvariant() : request.Url.AbsolutePath.ToLowerInvariant();
             entry.ClientKey = request.IsAuthenticated ? "auth" : "anon";
 
             return entry;

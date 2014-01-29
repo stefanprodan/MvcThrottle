@@ -83,7 +83,27 @@ public enum EndpointThrottlingType
 }
 ```
 
-###IP and/or endpoint White-listing
+###Customizing the rate limit response
+
+By default, when a client is rate limited a 409 HTTP exception gets raised. If you want to return a custom view instead of throwing an exception you’ll need to implement your own MvcThrottle and override the <code>QuotaExceededResult</code> method. In the example bellow I’ve created a view named RateLimited.cshtml located in the Views/Shared folder, using ViewBag.Message I am sending the error message to this view.
+
+``` cs
+public class MvcThrottleCustomFilter : MvcThrottle.ThrottlingFilter
+{
+    protected override ActionResult QuotaExceededResult(RequestContext context, string message, HttpStatusCode responseCode)
+    {
+        var rateLimitedView = new ViewResult
+        {
+            ViewName = "RateLimited"
+        };
+        rateLimitedView.ViewData["Message"] = message;
+
+        return rateLimitedView;
+    }
+}
+```
+
+###IP and/or Endpoint White-listing
 
 If requests are initiated from a white-listed IP or to a white-listed URL, then the throttling policy will not be applied and the requests will not get stored. The IP white-list supports IP v4 and v6 ranges like "192.168.0.0/24", "fe80::/10" and "192.168.0.0-192.168.0.255" for more information check [jsakamoto/ipaddressrange](https://github.com/jsakamoto/ipaddressrange).
 
@@ -104,7 +124,7 @@ var throttleFilter = new ThrottlingFilter
 ```
 
 
-###IP and/or endpoint custom rate limits
+###IP and/or Endpoint custom rate limits
 
 You can define custom limits for known IPs and endpoint, these limits will override the default ones. 
 Be aware that a custom limit will only work if you have defined a global counterpart.

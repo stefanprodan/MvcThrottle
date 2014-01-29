@@ -34,6 +34,8 @@ public class FilterConfig
 }
 ```
 
+In order to enable throttling you'll have to decorate your Controller or Action with <code>EnableThrottingAttribute</code>, if you want to exclude a certain Action you can apply <code>DisableThrottingAttribute</code>.
+
 ###Endpoint throttling based on IP
 
 If, from the same IP, in the same second, you'll make two calls to <code>home/index</code>, the last call will get blocked.

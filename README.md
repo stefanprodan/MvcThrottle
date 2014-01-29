@@ -85,7 +85,7 @@ public enum EndpointThrottlingType
 
 ###Customizing the rate limit response
 
-By default, when a client is rate limited a 409 HTTP exception gets raised. If you want to return a custom view instead of throwing an exception you’ll need to implement your own MvcThrottle and override the <code>QuotaExceededResult</code> method. In the example bellow I’ve created a view named RateLimited.cshtml located in the Views/Shared folder, using ViewBag.Message I am sending the error message to this view.
+By default, when a client is rate limited a 409 HTTP exception gets raised. If you want to return a custom view instead of throwing an exception you’ll need to implement your own ThrottlingFilter and override the <code>QuotaExceededResult</code> method. 
 
 ``` cs
 public class MvcThrottleCustomFilter : MvcThrottle.ThrottlingFilter
@@ -103,7 +103,7 @@ public class MvcThrottleCustomFilter : MvcThrottle.ThrottlingFilter
 }
 ```
 
-Take a look at MvcThrottle.Demo project for the full implementation.
+I’ve created a view named RateLimited.cshtml located in the Views/Shared folder and using ViewBag.Message I am sending the error message to this view. Take a look at MvcThrottle.Demo project for the full implementation.
 
 ###IP and/or Endpoint White-listing
 

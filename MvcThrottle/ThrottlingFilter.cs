@@ -165,8 +165,30 @@ namespace MvcThrottle
         {
             var entry = new RequestIdentity();
             entry.ClientIp = GetClientIp(request).ToString();
-            entry.Endpoint = Policy.IncludeQueryString ? request.Url.PathAndQuery.ToLowerInvariant() : request.Url.AbsolutePath.ToLowerInvariant();
             entry.ClientKey = request.IsAuthenticated ? "auth" : "anon";
+
+            var rd = request.RequestContext.RouteData;
+            string currentAction = rd.GetRequiredString("action");
+            string currentController = rd.GetRequiredString("controller");
+
+            switch (Policy.EndpointType)
+            {
+                case EndpointThrottlingType.AbsolutePath:
+                    entry.Endpoint = request.Url.AbsolutePath.ToLowerInvariant();
+                    break;
+                case EndpointThrottlingType.PathAndQuery:
+                    entry.Endpoint = request.Url.PathAndQuery.ToLowerInvariant();
+                    break;
+                case EndpointThrottlingType.ControllerAndAction:
+                    entry.Endpoint = currentController + "/" + currentAction;
+                    break;
+                case EndpointThrottlingType.Controller:
+                    entry.Endpoint = request.Url.AbsolutePath.ToLowerInvariant();
+                    entry.Endpoint = currentController;
+                    break;
+                default:
+                    break;
+            }
 
             return entry;
         }

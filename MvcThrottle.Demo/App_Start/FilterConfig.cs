@@ -36,6 +36,7 @@ namespace MvcThrottle.Demo
 
                     //scope to requests path
                     EndpointThrottling = true,
+                    EndpointType = EndpointThrottlingType.ControllerAndAction,
                     EndpointRules = new Dictionary<string, RateLimits>
                     { 
                         { "api/values/", new RateLimits { PerSecond = 3 } },

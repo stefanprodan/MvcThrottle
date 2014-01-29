@@ -32,7 +32,7 @@ namespace MvcThrottle
         public bool EndpointThrottling { get; set; }
         public List<string> EndpointWhitelist { get; set; }
         public Dictionary<string, RateLimits> EndpointRules { get; set; }
-        public bool IncludeQueryString { get; set; }
+        public EndpointThrottlingType EndpointType { get; set; }
 
         /// <summary>
         /// All requests including the rejected ones will stack in this order: week, day, hour, min, sec
@@ -46,6 +46,7 @@ namespace MvcThrottle
         /// </summary>
         public ThrottlePolicy(long? perSecond, long? perMinute = null, long? perHour = null, long? perDay = null, long? perWeek = null)
         {
+            EndpointType = EndpointThrottlingType.AbsolutePath;
             Rates = new Dictionary<RateLimitPeriod, long>();
             if (perSecond.HasValue) Rates.Add(RateLimitPeriod.Second, perSecond.Value);
             if (perMinute.HasValue) Rates.Add(RateLimitPeriod.Minute, perMinute.Value);
@@ -54,5 +55,13 @@ namespace MvcThrottle
             if (perWeek.HasValue) Rates.Add(RateLimitPeriod.Week, perWeek.Value);
         }
 
+    }
+
+    public enum EndpointThrottlingType
+    {
+        AbsolutePath = 1,
+        PathAndQuery,
+        ControllerAndAction,
+        Controller
     }
 }

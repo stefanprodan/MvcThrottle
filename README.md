@@ -74,13 +74,13 @@ var throttleFilter = new ThrottlingFilter
 Using the <code>ThrottlePolicy.EndpointType</code> property you can chose how the throttle key gets compose.
 
 ``` cs
-    public enum EndpointThrottlingType
-    {
-        AbsolutePath = 1,
-        PathAndQuery,
-        ControllerAndAction,
-        Controller
-    }
+public enum EndpointThrottlingType
+{
+    AbsolutePath = 1,
+    PathAndQuery,
+    ControllerAndAction,
+    Controller
+}
 ```
 
 ###IP and/or endpoint White-listing

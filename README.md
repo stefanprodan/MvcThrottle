@@ -105,7 +105,7 @@ public class MvcThrottleCustomFilter : MvcThrottle.ThrottlingFilter
 
 I’ve created a view named RateLimited.cshtml located in the Views/Shared folder and using ViewBag.Message I am sending the error message to this view. Take a look at MvcThrottle.Demo project for the full implementation.
 
-###IP and/or Endpoint White-listing
+###IP, Endpoint and Client White-listing
 
 If requests are initiated from a white-listed IP or to a white-listed URL, then the throttling policy will not be applied and the requests will not get stored. The IP white-list supports IP v4 and v6 ranges like "192.168.0.0/24", "fe80::/10" and "192.168.0.0-192.168.0.255" for more information check [jsakamoto/ipaddressrange](https://github.com/jsakamoto/ipaddressrange).
 
@@ -119,7 +119,11 @@ var throttleFilter = new ThrottlingFilter
 		
 		EndpointThrottling = true,
 		EndpointType = EndpointThrottlingType.ControllerAndAction,
-		EndpointWhitelist = new List<string> { "Home/Index" }
+		EndpointWhitelist = new List<string> { "Home/Index" },
+		
+		ClientThrottling = true,
+		//white list authenticated users
+		ClientWhitelist = new List<string> { "auth" }
 	},
 	Repository = new CacheRepository()
 });

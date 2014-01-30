@@ -165,6 +165,7 @@ namespace MvcThrottle
         {
             var entry = new RequestIdentity();
             entry.ClientIp = GetClientIp(request).ToString();
+
             entry.ClientKey = request.IsAuthenticated ? "auth" : "anon";
 
             var rd = request.RequestContext.RouteData;
@@ -174,21 +175,23 @@ namespace MvcThrottle
             switch (Policy.EndpointType)
             {
                 case EndpointThrottlingType.AbsolutePath:
-                    entry.Endpoint = request.Url.AbsolutePath.ToLowerInvariant();
+                    entry.Endpoint = request.Url.AbsolutePath;
                     break;
                 case EndpointThrottlingType.PathAndQuery:
-                    entry.Endpoint = request.Url.PathAndQuery.ToLowerInvariant();
+                    entry.Endpoint = request.Url.PathAndQuery;
                     break;
                 case EndpointThrottlingType.ControllerAndAction:
                     entry.Endpoint = currentController + "/" + currentAction;
                     break;
                 case EndpointThrottlingType.Controller:
-                    entry.Endpoint = request.Url.AbsolutePath.ToLowerInvariant();
                     entry.Endpoint = currentController;
                     break;
                 default:
                     break;
             }
+
+            //case insensitive routes
+            entry.Endpoint = entry.Endpoint.ToLowerInvariant();
 
             return entry;
         }
@@ -343,7 +346,7 @@ namespace MvcThrottle
 
         protected virtual ActionResult QuotaExceededResult(RequestContext context, string message, HttpStatusCode responseCode)
         {
-            throw new HttpException(message, 409);
+            return new HttpStatusCodeResult(responseCode, message);
         }
 
         private ThrottleLogEntry ComputeLogEntry(string requestId, RequestIdentity identity, ThrottleCounter throttleCounter, string rateLimitPeriod, long rateLimit, HttpRequestBase request)

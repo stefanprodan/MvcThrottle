@@ -11,7 +11,7 @@ namespace MvcThrottle.Demo
         {
             filters.Add(new HandleErrorAttribute());
 
-            var throttleFilter = new MvcThrottleCustomFilter
+            var throttleFilter = new MvcThrottle.ThrottlingFilter
             {
                 Policy = new MvcThrottle.ThrottlePolicy(perSecond: 1, perMinute: 10, perHour: 60 * 10, perDay: 600 * 10)
                 {

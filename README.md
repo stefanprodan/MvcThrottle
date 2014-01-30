@@ -200,7 +200,7 @@ public interface IThrottleRepository
 
 ###Logging throttled requests
 
-If you want to log throttled requests you'll have to implement IThrottleLogger interface and provide it to the ThrottlingHandler. 
+If you want to log throttled requests you'll have to implement IThrottleLogger interface and provide it to the ThrottlingFilter. 
 
 ``` cs
 public interface IThrottleLogger
@@ -211,13 +211,13 @@ public interface IThrottleLogger
 
 Logging implementation example
 ``` cs
-public class DebugThrottleLogger : IThrottleLogger
+public class MvcThrottleLogger : IThrottleLogger
 {
-	public void Log(ThrottleLogEntry entry)
-	{
-		Debug.WriteLine("{0} Request {1} has been blocked, quota {2}/{3} exceeded by {4}",
-		   entry.LogDate, entry.RequestId, entry.RateLimit, entry.RateLimitPeriod, entry.TotalRequests);
-	}
+    public void Log(ThrottleLogEntry entry)
+    {
+        Debug.WriteLine("{0} Request {1} from {2} has been blocked, quota {3}/{4} exceeded by {5}",
+            entry.LogDate, entry.RequestId, entry.ClientIp, entry.RateLimit, entry.RateLimitPeriod, entry.TotalRequests);
+    }
 }
 ```
 

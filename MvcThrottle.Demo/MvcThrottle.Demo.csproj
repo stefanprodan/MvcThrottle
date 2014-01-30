@@ -123,7 +123,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\MvcThrottleCustomFilter.cs" />
-    <Compile Include="Helpers\MvcThrottleLogger.cs" />
+    <Compile Include="Helpers\MvcThrottleCustomLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

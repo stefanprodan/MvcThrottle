@@ -20,6 +20,7 @@ namespace MvcThrottle
         public ThrottlingFilter()
         {
             QuotaExceededResponseCode = HttpStatusCode.Conflict;
+            Repository = new CacheRepository();
         }
 
         /// <summary>

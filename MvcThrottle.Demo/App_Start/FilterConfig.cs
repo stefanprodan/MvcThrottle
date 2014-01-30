@@ -11,7 +11,7 @@ namespace MvcThrottle.Demo
         {
             filters.Add(new HandleErrorAttribute());
 
-            var throttleFilter = new MvcThrottle.ThrottlingFilter
+            var throttleFilter = new MvcThrottleCustomFilter
             {
                 Policy = new MvcThrottle.ThrottlePolicy(perSecond: 1, perMinute: 10, perHour: 60 * 10, perDay: 600 * 10)
                 {
@@ -65,8 +65,7 @@ namespace MvcThrottle.Demo
                         { "Home/about", new RateLimits { PerMinute = 3 } }
                     }
                 },
-                Repository = new CacheRepository(),
-                Logger = new Helpers.MvcThrottleLogger()
+                Logger = new MvcThrottleCustomLogger()
             };
 
             filters.Add(throttleFilter);

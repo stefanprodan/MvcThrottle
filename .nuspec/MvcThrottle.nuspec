@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <version>1.0.0</version>
+    <authors>Stefan Prodan</authors>
+    <owners>Stefan Prodan</owners>
+    <id>MvcThrottle</id>
+    <title>ASP.NET MVC Throttling Filter</title>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>MvcThrottle filter is designed for controlling the rate of requests that clients can make to a website based on IP address, request route and client identity.</description>
+    <copyright>Stefan Prodan 2014</copyright>
+    <tags>ASP.NET MVC, throttling, rate limits</tags>
+    <projectUrl>https://github.com/stefanprodan/MvcThrottle</projectUrl>
+    <language>en-US</language>
+    <dependencies>
+      <dependency id="Microsoft.AspNet.Mvc" version="5.1.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\MvcThrottle\bin\Release\MvcThrottle.dll" target="lib\net45" />
+    <file src="..\MvcThrottle\bin\Release\MvcThrottle.xml" target="lib\net45" />
+    <file src="..\MvcThrottle\bin\Release\MvcThrottle.pdb" target="lib\net45" />
+    <file src="..\MvcThrottle\**\*.cs" target="src" />
+  </files>
+</package>

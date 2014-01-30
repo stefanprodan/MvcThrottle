@@ -113,7 +113,7 @@ namespace MvcThrottle
                         //apply endpoint rate limits
                         if (Policy.EndpointRules != null)
                         {
-                            var rules = Policy.EndpointRules.Where(x => identity.Endpoint.Contains(x.Key.ToLowerInvariant())).ToList();
+                            var rules = Policy.EndpointRules.Where(x => identity.Endpoint.ToLowerInvariant().Contains(x.Key.ToLowerInvariant())).ToList();
                             if (rules.Any())
                             {
                                 //get the lower limit from all applying rules

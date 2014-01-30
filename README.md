@@ -129,6 +129,7 @@ var throttleFilter = new ThrottlingFilter
 });
 ```
 
+The Demo project comes with a white-list of Google and Bing bot IPs, take at look at  [FilterConfig.cs](https://github.com/stefanprodan/MvcThrottle/blob/master/MvcThrottle.Demo/App_Start/FilterConfig.cs).
 
 ###IP and/or Endpoint custom rate limits
 

@@ -7,7 +7,7 @@
     <id>MvcThrottle</id>
     <title>ASP.NET MVC Throttling Filter</title>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>MvcThrottle filter is designed for controlling the rate of requests that clients can make to a website based on IP address, request route and client identity.</description>
+    <description>MvcThrottle filter is designed for controlling the rate of requests that clients can make to a website based on IP address, request route and client identity. You can set multiple limits for different scenarios like allowing an IP to make a maximum number of calls per second, per minute, per hour or per day. You can define these limits to address all requests made to your website or you can scope the limits to each Controller, Action or URL, with or without query string params.</description>
     <copyright>Stefan Prodan 2014</copyright>
     <tags>ASP.NET MVC, throttling, rate limits</tags>
     <projectUrl>https://github.com/stefanprodan/MvcThrottle</projectUrl>

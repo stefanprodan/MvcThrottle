@@ -314,7 +314,6 @@ namespace MvcThrottle
         {
             IPAddress ip = null;
             if (IPAddress.TryParse(clientIp, out ip))
-            {
                 if (ipRules != null && ipRules.Any())
                 {
                     foreach (var rule in ipRules)
@@ -323,26 +322,27 @@ namespace MvcThrottle
                         if (range.Contains(ip)) return true;
                     }
                 }
-            }
+
             return false;
         }
 
         private bool ContainsIp(List<string> ipRules, string clientIp, out string rule)
         {
             rule = null;
-            var ip = IPAddress.Parse(clientIp);
-            if (ipRules != null && ipRules.Any())
-            {
-                foreach (var r in ipRules)
+            IPAddress ip = null;
+            if (IPAddress.TryParse(clientIp, out ip))
+                if (ipRules != null && ipRules.Any())
                 {
-                    var range = new IPAddressRange(r);
-                    if (range.Contains(ip))
+                    foreach (var r in ipRules)
                     {
-                        rule = r;
-                        return true;
+                        var range = new IPAddressRange(r);
+                        if (range.Contains(ip))
+                        {
+                            rule = r;
+                            return true;
+                        }
                     }
                 }
-            }
 
             return false;
         }

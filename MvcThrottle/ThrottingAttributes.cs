@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace MvcThrottle
 {
-    public class EnableThrottingAttribute : ActionFilterAttribute, IActionFilter
+    public class EnableThrottlingAttribute : ActionFilterAttribute, IActionFilter
     {
 
     }

@@ -53,8 +53,8 @@ namespace MvcThrottle
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var applyThrottling = filterContext.ActionDescriptor.IsDefined(typeof(EnableThrottingAttribute), true) ||
-                filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(EnableThrottingAttribute), true);
+            var applyThrottling = filterContext.ActionDescriptor.IsDefined(typeof(EnableThrottlingAttribute), true) ||
+                filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(EnableThrottlingAttribute), true);
 
             //explicit disabled
             if (filterContext.ActionDescriptor.IsDefined(typeof(DisableThrottingAttribute), true))

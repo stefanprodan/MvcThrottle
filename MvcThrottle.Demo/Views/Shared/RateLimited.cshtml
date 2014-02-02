@@ -1,17 +1,8 @@
-﻿@{
-    Layout = null;
-}
+﻿
+<div class="jumbotron">
+    <div class="alert alert-warning">
+        <strong>You've been rate limited.</strong>
+        @ViewBag.Message
+    </div>
+</div>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Error</title>
-</head>
-<body>
-    <hgroup>
-        <h1>You've been rate limited!</h1>
-        <h3>@ViewBag.Message</h3>
-    </hgroup>
-</body>
-</html>

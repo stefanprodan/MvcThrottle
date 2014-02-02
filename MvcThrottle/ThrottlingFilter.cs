@@ -312,16 +312,18 @@ namespace MvcThrottle
 
         private bool ContainsIp(List<string> ipRules, string clientIp)
         {
-            var ip = IPAddress.Parse(clientIp);
-            if (ipRules != null && ipRules.Any())
+            IPAddress ip = null;
+            if (IPAddress.TryParse(clientIp, out ip))
             {
-                foreach (var rule in ipRules)
+                if (ipRules != null && ipRules.Any())
                 {
-                    var range = new IPAddressRange(rule);
-                    if (range.Contains(ip)) return true;
+                    foreach (var rule in ipRules)
+                    {
+                        var range = new IPAddressRange(rule);
+                        if (range.Contains(ip)) return true;
+                    }
                 }
             }
-
             return false;
         }
 

@@ -6,9 +6,10 @@ using System.Web.Mvc;
 
 namespace MvcThrottle.Demo.Controllers
 {
-    [EnableThrottling]
+    [EnableThrottling(PerSecond = 1 , PerMinute = 12)]
     public class HomeController : Controller
     {
+        [EnableThrottling(PerSecond = 2, PerMinute = 5)]
         public ActionResult Index()
         {
             return View();

@@ -53,14 +53,8 @@ namespace MvcThrottle
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var applyThrottling = filterContext.ActionDescriptor.IsDefined(typeof(EnableThrottlingAttribute), true) ||
-                filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(EnableThrottlingAttribute), true);
-
-            //explicit disabled
-            if (filterContext.ActionDescriptor.IsDefined(typeof(DisableThrottingAttribute), true))
-            {
-                applyThrottling = false;
-            }
+            EnableThrottlingAttribute attrPolicy = null;
+            var applyThrottling = ApplyThrottling(filterContext, out attrPolicy);
 
             if (Policy != null && applyThrottling)
             {
@@ -110,6 +104,13 @@ namespace MvcThrottle
 
                         if (throttleCounter.Timestamp + timeSpan < DateTime.UtcNow)
                             continue;
+
+                        //apply EnableThrottlingAttribute policy
+                        var attrLimit = attrPolicy.GetLimit(rateLimitPeriod);
+                        if (attrLimit > 0)
+                        {
+                            rateLimit = attrLimit;
+                        }
 
                         //apply endpoint rate limits
                         if (Policy.EndpointRules != null)
@@ -277,6 +278,32 @@ namespace MvcThrottle
                     return true;
 
             return false;
+        }
+
+        private bool ApplyThrottling(ActionExecutingContext filterContext, out EnableThrottlingAttribute attr)
+        {
+            var applyThrottling = false;
+            attr = null;
+
+            if (filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(EnableThrottlingAttribute), true))
+            {
+                attr = (EnableThrottlingAttribute)filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(EnableThrottlingAttribute), true).First();
+                applyThrottling = true;
+            }
+
+            if (filterContext.ActionDescriptor.IsDefined(typeof(EnableThrottlingAttribute), true))
+            {
+                attr = (EnableThrottlingAttribute)filterContext.ActionDescriptor.GetCustomAttributes(typeof(EnableThrottlingAttribute), true).First();
+                applyThrottling = true;
+            }
+
+            //explicit disabled
+            if (filterContext.ActionDescriptor.IsDefined(typeof(DisableThrottingAttribute), true))
+            {
+                applyThrottling = false;
+            }
+
+            return applyThrottling;
         }
 
         public static string GetClientIp(HttpRequestBase request)

@@ -51,7 +51,7 @@ public class HomeController : Controller
 You can define custom limits using the EnableThrottling attribute, these limits will override the default ones.
 
 ``` cs
-[EnableThrottling(PerSecond = 2, PerMinute = 10, PerHour = 30, PerDay = 300]
+[EnableThrottling(PerSecond = 2, PerMinute = 10, PerHour = 30, PerDay = 300)]
 public ActionResult Index()
 {
     return View();

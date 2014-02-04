@@ -48,6 +48,16 @@ public class HomeController : Controller
 }
 ```
 
+You can define custom limits using the EnableThrottling attribute, these limits will override the default ones.
+
+``` cs
+[EnableThrottling(PerSecond = 2, PerMinute = 10, PerHour = 30, PerDay = 300]
+public ActionResult Index()
+{
+    return View();
+}
+```
+
 ###Endpoint throttling based on IP
 
 If, from the same IP, in the same second, you'll make two calls to <code>home/index</code>, the last call will get blocked.

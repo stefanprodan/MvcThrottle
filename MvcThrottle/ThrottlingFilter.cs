@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -15,11 +16,11 @@ namespace MvcThrottle
         /// <summary>
         /// Creates a new instance of the <see cref="ThrottlingHandler"/> class.
         /// By default, the <see cref="QuotaExceededResponseCode"/> property 
-        /// is set to 409 (Conflict).
+        /// is set to 429 (Too Many Requests).
         /// </summary>
         public ThrottlingFilter()
         {
-            QuotaExceededResponseCode = HttpStatusCode.Conflict;
+            QuotaExceededResponseCode = (HttpStatusCode)429;
             Repository = new CacheRepository();
         }
 
@@ -34,7 +35,7 @@ namespace MvcThrottle
         public IThrottleRepository Repository { get; set; }
 
         /// <summary>
-        /// Log traffic and blocked requests
+        /// Log blocked requests
         /// </summary>
         public IThrottleLogger Logger { get; set; }
 
@@ -47,7 +48,7 @@ namespace MvcThrottle
         /// <summary>
         /// Gets or sets the value to return as the HTTP status 
         /// code when a request is rejected because of the
-        /// throttling policy. The default value is 409 (Conflict)
+        /// throttling policy. The default value is 429 (Too Many Requests).
         /// </summary>
         public HttpStatusCode QuotaExceededResponseCode { get; set; }
 
@@ -59,7 +60,7 @@ namespace MvcThrottle
             if (Policy != null && applyThrottling)
             {
                 var identity = SetIndentity(filterContext.HttpContext.Request);
-                System.Diagnostics.Debug.WriteLine(identity.ToString());
+
                 if (!IsWhitelisted(identity))
                 {
                     TimeSpan timeSpan = TimeSpan.FromSeconds(1);
@@ -153,11 +154,18 @@ namespace MvcThrottle
                             var message = string.IsNullOrEmpty(QuotaExceededMessage) ?
                                 "HTTP request quota exceeded! maximum admitted {0} per {1}" : QuotaExceededMessage;
 
-                            filterContext.Result = QuotaExceededResult(filterContext.RequestContext, string.Format(message, rateLimit, rateLimitPeriod), QuotaExceededResponseCode);
+                            //add status code and retry after x seconds to response
+                            filterContext.HttpContext.Response.StatusCode = (int)QuotaExceededResponseCode;
+                            filterContext.HttpContext.Response.Headers.Set("Retry-After", RetryAfterFrom(throttleCounter.Timestamp, rateLimitPeriod));
+
+                            filterContext.Result = QuotaExceededResult(
+                                filterContext.RequestContext,
+                                string.Format(message, rateLimit, rateLimitPeriod),
+                                QuotaExceededResponseCode,
+                                requestId);
                         }
                     }
                 }
-
             }
 
             base.OnActionExecuting(filterContext);
@@ -261,6 +269,29 @@ namespace MvcThrottle
             var hashBytes = new System.Security.Cryptography.SHA1Managed().ComputeHash(idBytes);
             var hex = BitConverter.ToString(hashBytes).Replace("-", "");
             return hex;
+        }
+
+        private string RetryAfterFrom(DateTime timestamp, RateLimitPeriod period)
+        {
+            var secondsPast = Convert.ToInt32((DateTime.UtcNow - timestamp).TotalSeconds);
+            var retryAfter = 1;
+            switch (period)
+            {
+                case RateLimitPeriod.Minute:
+                    retryAfter = 60;
+                    break;
+                case RateLimitPeriod.Hour:
+                    retryAfter = 60 * 60;
+                    break;
+                case RateLimitPeriod.Day:
+                    retryAfter = 60 * 60 * 24;
+                    break;
+                case RateLimitPeriod.Week:
+                    retryAfter = 60 * 60 * 24 * 7;
+                    break;
+            }
+            retryAfter = retryAfter > 1 ? retryAfter - secondsPast : 1;
+            return retryAfter.ToString(CultureInfo.InvariantCulture);
         }
 
         private bool IsWhitelisted(RequestIdentity requestIdentity)
@@ -374,7 +405,7 @@ namespace MvcThrottle
             return false;
         }
 
-        protected virtual ActionResult QuotaExceededResult(RequestContext context, string message, HttpStatusCode responseCode)
+        protected virtual ActionResult QuotaExceededResult(RequestContext filterContext, string message, HttpStatusCode responseCode, string requestId)
         {
             return new HttpStatusCodeResult(responseCode, message);
         }

@@ -19,7 +19,7 @@ namespace MvcThrottle.Demo
                     IpThrottling = true,
                     IpRules = new Dictionary<string, MvcThrottle.RateLimits>
                     { 
-                        { "::1/10", new MvcThrottle.RateLimits { PerMinute = 4 } },
+                        { "::1/10", new MvcThrottle.RateLimits { PerHour = 15 } },
                         { "192.168.2.1", new MvcThrottle.RateLimits { PerMinute = 30, PerHour = 30*60, PerDay = 30*60*24 } }
                     },
                     IpWhitelist = new List<string> 

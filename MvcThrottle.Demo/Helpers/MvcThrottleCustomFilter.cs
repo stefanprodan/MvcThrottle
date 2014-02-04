@@ -9,7 +9,7 @@ namespace MvcThrottle.Demo.Helpers
 {
     public class MvcThrottleCustomFilter : MvcThrottle.ThrottlingFilter
     {
-        protected override ActionResult QuotaExceededResult(RequestContext context, string message, System.Net.HttpStatusCode responseCode)
+        protected override ActionResult QuotaExceededResult(RequestContext filterContext, string message, System.Net.HttpStatusCode responseCode, string requestId)
         {
             var rateLimitedView = new ViewResult
             {

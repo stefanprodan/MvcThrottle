@@ -6,15 +6,15 @@ using System.Web.Mvc;
 
 namespace MvcThrottle.Demo.Controllers
 {
-    [EnableThrottling(PerSecond = 1 , PerMinute = 12)]
+    [EnableThrottling]
     public class HomeController : Controller
     {
-        [EnableThrottling(PerSecond = 2, PerMinute = 5)]
         public ActionResult Index()
         {
             return View();
         }
 
+        [EnableThrottling(PerSecond = 2, PerMinute = 5)]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -22,6 +22,7 @@ namespace MvcThrottle.Demo.Controllers
             return View();
         }
 
+        [DisableThrotting]
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

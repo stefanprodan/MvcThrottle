@@ -90,7 +90,7 @@ public enum EndpointThrottlingType
 
 ###Customizing the rate limit response
 
-By default, when a client is rate limited a 409 HTTP exception gets raised. If you want to return a custom view instead of throwing an exception you’ll need to implement your own ThrottlingFilter and override the <code>QuotaExceededResult</code> method. 
+By default, when a client is rate limited a 429 HTTP status code is sent back along with <code>Retry-After</code> header. If you want to return a custom view instead of IIS error page you’ll need to implement your own ThrottlingFilter and override the <code>QuotaExceededResult</code> method.
 
 ``` cs
 public class MvcThrottleCustomFilter : MvcThrottle.ThrottlingFilter

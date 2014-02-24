@@ -6,8 +6,7 @@ using System.Web.Mvc;
 
 namespace MvcThrottle.Demo.Controllers
 {
-    [EnableThrottling]
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index()
         {

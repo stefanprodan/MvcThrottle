@@ -163,6 +163,8 @@ namespace MvcThrottle
                                 string.Format(message, rateLimit, rateLimitPeriod),
                                 QuotaExceededResponseCode,
                                 requestId);
+                                
+                            return;
                         }
                     }
                 }

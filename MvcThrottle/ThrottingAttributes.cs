@@ -15,7 +15,7 @@ namespace MvcThrottle
         public long PerDay { get; set; }
         public long PerWeek { get; set; }
 
-        public long GetLimit(RateLimitPeriod period)
+        public virtual long GetLimit(RateLimitPeriod period)
         {
             switch (period)
             {

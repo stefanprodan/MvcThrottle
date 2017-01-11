@@ -62,7 +62,7 @@ namespace MvcThrottle
 
             if (Policy != null && applyThrottling)
             {
-                var identity = SetIndentity(filterContext.HttpContext.Request);
+                var identity = SetIdentity(filterContext.HttpContext.Request);
 
                 if (!IsWhitelisted(identity))
                 {
@@ -176,7 +176,7 @@ namespace MvcThrottle
             base.OnActionExecuting(filterContext);
         }
 
-        protected virtual RequestIdentity SetIndentity(HttpRequestBase request)
+        protected virtual RequestIdentity SetIdentity(HttpRequestBase request)
         {
             var entry = new RequestIdentity();
             entry.ClientIp = IpAddressParser.GetClientIp(request).ToString();

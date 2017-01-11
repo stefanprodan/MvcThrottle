@@ -1,6 +1,9 @@
 MvcThrottle
 ===========
 
+[![Build status](https://ci.appveyor.com/api/projects/status/xdyd4xb4bihivdjt?svg=true)](https://ci.appveyor.com/project/stefanprodan/mvcthrottle)
+[![NuGet](https://img.shields.io/nuget/v/MvcThrottle.svg)](https://www.nuget.org/packages/MvcThrottle)
+
 With MvcThrottle you can protect your site from aggressive crawlers, scraping tools or unwanted traffic spikes originated from the same location by limiting the rate of requests that a client from the same IP can make to your site or to specific routes.
 
 You can set multiple limits for different scenarios like allowing an IP to make a maximum number of calls per second, per minute, per hour or per day. You can define these limits to address all requests made to your website or you can scope the limits to each Controller, Action or URL, with or without query string params.

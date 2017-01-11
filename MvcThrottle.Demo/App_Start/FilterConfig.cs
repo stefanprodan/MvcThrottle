@@ -80,6 +80,7 @@ namespace MvcThrottle.Demo
                         { "Home/about", new RateLimits { PerHour = 30 } }
                     }
                 },
+                IpAddressParser = new NginxIpAddressParser(),
                 Logger = new MvcThrottleCustomLogger()
             };
 

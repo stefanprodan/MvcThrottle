@@ -22,6 +22,7 @@ namespace MvcThrottle
         {
             QuotaExceededResponseCode = (HttpStatusCode)429;
             Repository = new CacheRepository();
+            IpAddressParser = new IpAddressParser();
         }
 
         /// <summary>
@@ -51,6 +52,8 @@ namespace MvcThrottle
         /// throttling policy. The default value is 429 (Too Many Requests).
         /// </summary>
         public HttpStatusCode QuotaExceededResponseCode { get; set; }
+
+        public IIpAddressParser IpAddressParser { get; set; }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -138,7 +141,7 @@ namespace MvcThrottle
 
                         //enforce ip rate limit as is most specific 
                         string ipRule = null;
-                        if (Policy.IpRules != null && ContainsIp(Policy.IpRules.Keys.ToList(), identity.ClientIp, out ipRule))
+                        if (Policy.IpRules != null && IpAddressParser.ContainsIp(Policy.IpRules.Keys.ToList(), identity.ClientIp, out ipRule))
                         {
                             var limit = Policy.IpRules[ipRule].GetLimit(rateLimitPeriod);
                             if (limit > 0) rateLimit = limit;
@@ -176,7 +179,7 @@ namespace MvcThrottle
         protected virtual RequestIdentity SetIndentity(HttpRequestBase request)
         {
             var entry = new RequestIdentity();
-            entry.ClientIp = GetClientIp(request).ToString();
+            entry.ClientIp = IpAddressParser.GetClientIp(request).ToString();
 
             entry.ClientKey = request.IsAuthenticated ? "auth" : "anon";
 
@@ -299,7 +302,7 @@ namespace MvcThrottle
         private bool IsWhitelisted(RequestIdentity requestIdentity)
         {
             if (Policy.IpThrottling)
-                if (Policy.IpWhitelist != null && ContainsIp(Policy.IpWhitelist, requestIdentity.ClientIp))
+                if (Policy.IpWhitelist != null && IpAddressParser.ContainsIp(Policy.IpWhitelist, requestIdentity.ClientIp))
                     return true;
 
             if (Policy.ClientThrottling)
@@ -337,74 +340,6 @@ namespace MvcThrottle
             }
 
             return applyThrottling;
-        }
-
-        public static string GetClientIp(HttpRequestBase request)
-        {
-            string ip = null;
-            try
-            {
-                if (request.IsSecureConnection)
-                {
-                    ip = request.ServerVariables["REMOTE_ADDR"];
-                }
-
-                if (string.IsNullOrEmpty(ip))
-                {
-                    ip = request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-                    if (!string.IsNullOrEmpty(ip))
-                    {
-                        if (ip.IndexOf(",") > 0)
-                        {
-                            ip = ip.Split(',').Last();
-                        }
-                    }
-                    else
-                    {
-                        ip = request.UserHostAddress;
-                    }
-                }
-            }
-            catch { ip = null; }
-
-            return ip;
-        }
-
-        private bool ContainsIp(List<string> ipRules, string clientIp)
-        {
-            IPAddress ip = null;
-            if (IPAddress.TryParse(clientIp, out ip))
-                if (ipRules != null && ipRules.Any())
-                {
-                    foreach (var rule in ipRules)
-                    {
-                        var range = new IPAddressRange(rule);
-                        if (range.Contains(ip)) return true;
-                    }
-                }
-
-            return false;
-        }
-
-        private bool ContainsIp(List<string> ipRules, string clientIp, out string rule)
-        {
-            rule = null;
-            IPAddress ip = null;
-            if (IPAddress.TryParse(clientIp, out ip))
-                if (ipRules != null && ipRules.Any())
-                {
-                    foreach (var r in ipRules)
-                    {
-                        var range = new IPAddressRange(r);
-                        if (range.Contains(ip))
-                        {
-                            rule = r;
-                            return true;
-                        }
-                    }
-                }
-
-            return false;
         }
 
         protected virtual ActionResult QuotaExceededResult(RequestContext filterContext, string message, HttpStatusCode responseCode, string requestId)

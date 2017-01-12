@@ -334,7 +334,7 @@ namespace MvcThrottle
             }
 
             //explicit disabled
-            if (filterContext.ActionDescriptor.IsDefined(typeof(DisableThrottingAttribute), true))
+            if (filterContext.ActionDescriptor.IsDefined(typeof(DisableThrottlingAttribute), true))
             {
                 applyThrottling = false;
             }

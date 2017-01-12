@@ -32,7 +32,7 @@ public class FilterConfig
 }
 ```
 
-In order to enable throttling you'll have to decorate your Controller or Action with <code>EnableThrottlingAttribute</code>, if you want to exclude a certain Action you can apply <code>DisableThrottingAttribute</code>.
+In order to enable throttling you'll have to decorate your Controller or Action with <code>EnableThrottlingAttribute</code>, if you want to exclude a certain Action you can apply <code>DisableThrottlingAttribute</code>.
 
 ``` cs
 [EnableThrottling]
@@ -43,7 +43,7 @@ public class HomeController : Controller
         return View();
     }
 
-    [DisableThrotting]
+    [DisableThrottling]
     public ActionResult About()
     {
         return View();

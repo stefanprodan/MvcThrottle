@@ -36,7 +36,7 @@ namespace MvcThrottle
     }
 
 
-    public class DisableThrottingAttribute : ActionFilterAttribute, IActionFilter
+    public class DisableThrottlingAttribute : ActionFilterAttribute, IActionFilter
     {
 
     }

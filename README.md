@@ -172,6 +172,42 @@ var throttleFilter = new ThrottlingFilter
 });
 ```
 
+### User-Agent rate limiting
+
+You can define custom limits for known User-Agents or event white-list them, these limits will override the default ones. 
+
+``` cs
+var throttleFilter = new ThrottlingFilter
+{
+	Policy = new ThrottlePolicy(perSecond: 5, perMinute: 20, perHour: 200, perDay: 1500)
+	{
+		IpThrottling = true,
+		EndpointThrottling = true,
+		EndpointType = EndpointThrottlingType.AbsolutePath,
+
+		UserAgentThrottling = true,
+		UserAgentWhitelist = new List<string>
+		{
+			"Googlebot",
+			"Mediapartners-Google",
+			"AdsBot-Google",
+			"Bingbot",
+			"YandexBot",
+			"DuckDuckBot"
+		},
+		UserAgentRules = new Dictionary<string, RateLimits>
+		{
+			{"Slurp", new RateLimits { PerMinute = 1 }},
+			{"Sogou", new RateLimits { PerHour = 1 } }
+		}
+	},
+	Repository = new CacheRepository()
+});
+```
+
+The above setup will allow the Sogou bot to crawl each URL once every hour while Google, Bing, Yandex and DuckDuck will not get rate limited at all. 
+Any other bot that is not present in the setup will be rate limited based on the global rules defined in the ThrottlePolicy constuctor.
+
 ###Stack rejected requests
 
 By default, rejected calls are not added to the throttle counter. If a client makes 3 requests per second 

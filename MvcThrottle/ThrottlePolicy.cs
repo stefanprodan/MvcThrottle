@@ -20,6 +20,13 @@ namespace MvcThrottle
         public Dictionary<string, RateLimits> IpRules { get; set; }
 
         /// <summary>
+        /// Enables User-Agent throttling
+        /// </summary>
+        public bool UserAgentThrottling { get; set; }
+        public List<string> UserAgentWhitelist { get; set; }
+        public Dictionary<string, RateLimits> UserAgentRules { get; set; }
+
+        /// <summary>
         /// Enables Cient Key throttling
         /// </summary>
         public bool ClientThrottling { get; set; }

@@ -14,6 +14,7 @@ namespace MvcThrottle
         public string ClientIp { get; set; }
         public string ClientKey { get; set; }
         public string Endpoint { get; set; }
+        public string UserAgent { get; set; }
         public long TotalRequests { get; set; }
         public DateTime StartPeriod { get; set; }
         public long RateLimit { get; set; }

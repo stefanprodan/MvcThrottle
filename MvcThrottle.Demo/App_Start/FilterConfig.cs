@@ -73,12 +73,30 @@ namespace MvcThrottle.Demo
 
                     //scope to requests path
                     EndpointThrottling = true,
-                    EndpointType = EndpointThrottlingType.ControllerAndAction,
+                    EndpointType = EndpointThrottlingType.AbsolutePath,
                     EndpointRules = new Dictionary<string, RateLimits>
                     { 
                         { "home/", new RateLimits { PerHour = 90 } },
                         { "Home/about", new RateLimits { PerHour = 30 } }
+                    },
+
+                    //scope to User-Agents
+                    UserAgentThrottling = true,
+                    UserAgentWhitelist = new List<string>
+                    {
+                        "Googlebot",
+                        "Mediapartners-Google",
+                        "AdsBot-Google",
+                        "Bingbot",
+                        "YandexBot",
+                        "DuckDuckBot"
+                    },
+                    UserAgentRules = new Dictionary<string, RateLimits>
+                    {
+                        {"Facebot", new RateLimits { PerMinute = 1 }},
+                        {"Sogou", new RateLimits { PerHour = 1 } }
                     }
+
                 },
                 IpAddressParser = new NginxIpAddressParser(),
                 Logger = new MvcThrottleCustomLogger()

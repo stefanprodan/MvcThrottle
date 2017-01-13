@@ -119,7 +119,7 @@ namespace MvcThrottle
                         //apply endpoint rate limits
                         if (Policy.EndpointRules != null)
                         {
-                            var rules = Policy.EndpointRules.Where(x => identity.Endpoint.ToLowerInvariant().Contains(x.Key.ToLowerInvariant())).ToList();
+                            var rules = Policy.EndpointRules.Where(x => identity.Endpoint.IndexOf(x.Key, 0, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
                             if (rules.Any())
                             {
                                 //get the lower limit from all applying rules
@@ -137,6 +137,18 @@ namespace MvcThrottle
                         {
                             var limit = Policy.ClientRules[identity.ClientKey].GetLimit(rateLimitPeriod);
                             if (limit > 0) rateLimit = limit;
+                        }
+
+                        //apply custom rate limit for user agent
+                        if (Policy.UserAgentRules != null)
+                        {
+                            var rules = Policy.UserAgentRules.Where(x => identity.UserAgent.IndexOf(x.Key, 0, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
+                            if (rules.Any())
+                            {
+                                //get the lower limit from all applying rules
+                                var customRate = (from r in rules let rateValue = r.Value.GetLimit(rateLimitPeriod) select rateValue).Min();
+                                rateLimit = customRate;
+                            }
                         }
 
                         //enforce ip rate limit as is most specific 
@@ -208,6 +220,8 @@ namespace MvcThrottle
             //case insensitive routes
             entry.Endpoint = entry.Endpoint.ToLowerInvariant();
 
+            entry.UserAgent = request.UserAgent;
+
             return entry;
         }
 
@@ -267,6 +281,9 @@ namespace MvcThrottle
             if (Policy.EndpointThrottling)
                 keyValues.Add(requestIdentity.Endpoint);
 
+            if (Policy.UserAgentThrottling)
+                keyValues.Add(requestIdentity.UserAgent);
+
             keyValues.Add(period.ToString());
 
             var id = string.Join("_", keyValues);
@@ -310,7 +327,13 @@ namespace MvcThrottle
                     return true;
 
             if (Policy.EndpointThrottling)
-                if (Policy.EndpointWhitelist != null && Policy.EndpointWhitelist.Any(x => requestIdentity.Endpoint.Contains(x.ToLowerInvariant())))
+                if (Policy.EndpointWhitelist != null && 
+                    Policy.EndpointWhitelist.Any(x => requestIdentity.Endpoint.IndexOf(x, 0, StringComparison.InvariantCultureIgnoreCase) != -1))
+                    return true;
+
+            if (Policy.UserAgentThrottling)
+                if (Policy.UserAgentWhitelist != null && 
+                    Policy.UserAgentWhitelist.Any(x => requestIdentity.UserAgent.IndexOf(x, 0, StringComparison.InvariantCultureIgnoreCase) != -1))
                     return true;
 
             return false;
@@ -354,6 +377,7 @@ namespace MvcThrottle
                 ClientIp = identity.ClientIp,
                 ClientKey = identity.ClientKey,
                 Endpoint = identity.Endpoint,
+                UserAgent = identity.UserAgent,
                 LogDate = DateTime.UtcNow,
                 RateLimit = rateLimit,
                 RateLimitPeriod = rateLimitPeriod,

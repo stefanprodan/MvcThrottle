@@ -88,6 +88,7 @@
     <Compile Include="ThrottlingFilter.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="MvcThrottle.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

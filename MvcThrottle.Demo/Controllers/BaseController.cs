@@ -10,5 +10,5 @@ namespace MvcThrottle.Demo.Controllers
     public class BaseController : Controller
     {
 
-	}
+    }
 }

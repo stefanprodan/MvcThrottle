@@ -349,6 +349,12 @@ namespace MvcThrottle
                 attr = (EnableThrottlingAttribute)filterContext.ActionDescriptor.ControllerDescriptor.GetCustomAttributes(typeof(EnableThrottlingAttribute), true).First();
                 applyThrottling = true;
             }
+            
+            //disabled on the class
+            if (filterContext.ActionDescriptor.ControllerDescriptor.IsDefined(typeof(DisableThrottlingAttribute), true))
+            {
+                applyThrottling = false;
+            }
 
             if (filterContext.ActionDescriptor.IsDefined(typeof(EnableThrottlingAttribute), true))
             {

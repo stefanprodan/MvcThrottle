@@ -331,7 +331,7 @@ namespace MvcThrottle
                     Policy.EndpointWhitelist.Any(x => requestIdentity.Endpoint.IndexOf(x, 0, StringComparison.InvariantCultureIgnoreCase) != -1))
                     return true;
 
-            if (Policy.UserAgentThrottling)
+            if (Policy.UserAgentThrottling && requestIdentity.UserAgent != null)
                 if (Policy.UserAgentWhitelist != null && 
                     Policy.UserAgentWhitelist.Any(x => requestIdentity.UserAgent.IndexOf(x, 0, StringComparison.InvariantCultureIgnoreCase) != -1))
                     return true;

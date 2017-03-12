@@ -140,7 +140,7 @@ namespace MvcThrottle
                         }
 
                         //apply custom rate limit for user agent
-                        if (Policy.UserAgentRules != null)
+                        if (Policy.UserAgentRules != null && !string.IsNullOrEmpty(identity.UserAgent))
                         {
                             var rules = Policy.UserAgentRules.Where(x => identity.UserAgent.IndexOf(x.Key, 0, StringComparison.InvariantCultureIgnoreCase) != -1).ToList();
                             if (rules.Any())
